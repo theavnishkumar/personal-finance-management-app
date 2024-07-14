@@ -1,39 +1,63 @@
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import PropTypes from "prop-types";
-import MailIcon from "@mui/icons-material/Mail";
+import {
+  Avatar,
+  Paper,
+  Typography,
+  Divider,
+  ListItemText,
+  ListItemIcon,
+  ListItemButton,
+  ListItem,
+  List,
+  Drawer,
+  Box,
+} from "@mui/material";
+import {
+  AccountCircle,
+  Logout,
+  Settings,
+  SpaceDashboard,
+} from "@mui/icons-material";
+import { Link } from "react-router-dom";
+
+const drawerData = [
+  { name: "Dashboard", path: "/dashboard", icon: <SpaceDashboard /> },
+  { name: "Profile", path: "/profile", icon: <AccountCircle /> },
+  { name: "Settings", path: "/settings", icon: <Settings /> },
+  { name: "Logout", path: "/logout", icon: <Logout /> },
+];
 
 const AppDrawer = ({ open, toggleDrawer }) => {
   const drawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-      <List>
-        {["Dashboard", "Profile", "Settings"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      <Paper
+        sx={{
+          margin: "1rem",
+          padding: "0.6rem",
+          px: "1rem",
+          py: "1rem",
+          display: "flex",
+          justifyContent: "flex-start",
+        }}
+        elevation={3}
+      >
+        <Avatar sx={{ bgcolor: "purple", mr: "0.7rem", width: 40, height: 40 }}>
+          AK
+        </Avatar>
+        <Box>
+          <Typography variant="h6">Avnish Kumar</Typography>
+          <Typography sx={{ fontSize: "0.9rem", color: "gray" }}>
+            hi@theavnishkumar
+          </Typography>
+        </Box>
+      </Paper>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
+        {drawerData.map((data) => (
+          <ListItem key={data.path} disablePadding>
+            <ListItemButton component={Link} to={data.path}>
+              <ListItemIcon>{data.icon}</ListItemIcon>
+              <ListItemText primary={data.name} />
             </ListItemButton>
           </ListItem>
         ))}

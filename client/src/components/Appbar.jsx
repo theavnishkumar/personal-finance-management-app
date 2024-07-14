@@ -7,126 +7,68 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import AppDrawer from "./AppDrawer";
-import { Avatar, Menu, MenuItem, Tooltip } from "@mui/material";
-import { Wallet } from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
+import { MenuOpen, Wallet } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
-const pages = ["Dashboard", "Profile"];
+const pages = [
+  { name: "Dashboard", path: "/dashboard" },
+  { name: "Profile", path: "/profile" },
+];
 
 function Appbar() {
   const [open, setOpen] = React.useState(false);
-
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
 
-  const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
   return (
-    <AppBar position="static" color="primary">
+    <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Wallet sx={{ mr: 1 }} />
+          <Wallet sx={{ mr: 1, fontSize: "1.8rem" }} />
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
-            component="a"
-            href="#"
+            component={Link}
+            to={"/"}
             sx={{
               mr: 2,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              //   letterSpacing: ".1rem",
+              fontFamily: "sans-serif",
+              fontWeight: 600,
+              letterSpacing: ".1rem",
               color: "inherit",
               textDecoration: "none",
             }}
           >
             Money Manager
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
+          <Box sx={{ flexGrow: 2, display: { xs: "none", md: "flex" } }}></Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
-                key={page}
-                sx={{ my: 2, color: "white", display: "block" }}
+                key={page.path}
+                component={Link}
+                to={page.path}
+                sx={{
+                  my: 2,
+                  color: "white",
+                  display: "block",
+                  fontWeight: 300,
+                }}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}></Box>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}></Box>
-          <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={toggleDrawer(true)} sx={{ p: 0 }}>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://mui.com//static/images/avatar/2.jpg"
-                />
+                <MenuOpen sx={{ color: "white", fontSize: "1.8rem" }} />
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://mui.com//static/images/avatar/2.jpg"
-                />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
           </Box>
         </Toolbar>
       </Container>
