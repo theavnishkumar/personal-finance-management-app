@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import {
   AccountCircle,
+  AnalyticsRounded,
   Logout,
   Settings,
   SpaceDashboard,
@@ -22,6 +23,7 @@ import { Link } from "react-router-dom";
 
 const drawerData = [
   { name: "Dashboard", path: "/dashboard", icon: <SpaceDashboard /> },
+  { name: "Analytics", path: "/analytics", icon: <AnalyticsRounded /> },
   { name: "Profile", path: "/profile", icon: <AccountCircle /> },
   { name: "Settings", path: "/settings", icon: <Settings /> },
   { name: "Logout", path: "/logout", icon: <Logout /> },
@@ -46,7 +48,7 @@ const AppDrawer = ({ open, toggleDrawer }) => {
         </Avatar>
         <Box>
           <Typography variant="h6">Avnish Kumar</Typography>
-          <Typography sx={{ fontSize: "0.9rem", color: "gray" }}>
+          <Typography sx={{ fontSize: "0.9rem", color: "text.secondary" }}>
             hi@theavnishkumar
           </Typography>
         </Box>

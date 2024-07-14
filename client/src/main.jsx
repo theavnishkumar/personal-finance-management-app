@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Profile from "./pages/Profile.jsx";
 import Error from "./Error.jsx";
 import Home from "./pages/Home.jsx";
+import Analytics from "./pages/Analytics.jsx";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "/analytics",
+        element: <Analytics />,
       },
       {
         path: "/profile",
