@@ -4,7 +4,7 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import {
   EqualizerRounded,
   SpaceDashboardRounded,
-  MenuRounded,
+  AccountCircleRounded,
 } from "@mui/icons-material";
 import { Paper } from "@mui/material";
 import AppDrawer from "./AppDrawer";
@@ -21,7 +21,7 @@ export default function BottomNav() {
   return (
     <Paper
       sx={{
-        position: "fixed",
+        position: "absolute",
         bottom: 0,
         left: 0,
         right: 0,
@@ -49,8 +49,10 @@ export default function BottomNav() {
           to="/analytics"
         />
         <BottomNavigationAction
-          label="Menu"
-          icon={<MenuRounded onClick={toggleDrawer(true)} />}
+          component={Link}
+          to={"/profile"}
+          label="Profile"
+          icon={<AccountCircleRounded />}
         />
       </BottomNavigation>
       <AppDrawer open={open} toggleDrawer={toggleDrawer} />

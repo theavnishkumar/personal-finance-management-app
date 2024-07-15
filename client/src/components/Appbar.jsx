@@ -24,12 +24,12 @@ function Appbar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ background: "#02474d" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Wallet sx={{ mr: 1, fontSize: "1.8rem" }} />
           <Typography
-            variant="h5"
+            variant="h6"
             noWrap
             component={Link}
             to={"/"}

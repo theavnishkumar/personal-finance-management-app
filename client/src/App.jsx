@@ -4,7 +4,7 @@ import BottomNav from "./components/BottomNav";
 
 const App = () => {
   return (
-    <main className="min-h-svh">
+    <main className="">
       <Appbar />
       <Outlet />
       <BottomNav />

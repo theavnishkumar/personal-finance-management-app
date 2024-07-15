@@ -6,9 +6,14 @@ const Dashboard = () => {
     <div>
       Dashboard
       <Fab
-        color="primary"
         aria-label="edit"
-        sx={{ position: "fixed", bottom: 70, right: 30 }}
+        sx={{
+          position: "fixed",
+          bottom: { xs: 70, md: 20 },
+          right: 15,
+          backgroundColor: "#02474d",
+          color: "white",
+        }}
       >
         <EditIcon />
       </Fab>
