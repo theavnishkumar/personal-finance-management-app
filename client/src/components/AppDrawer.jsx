@@ -26,7 +26,7 @@ const drawerData = [
   { name: "Analytics", path: "/analytics", icon: <AnalyticsRounded /> },
   { name: "Profile", path: "/profile", icon: <AccountCircle /> },
   { name: "Settings", path: "/settings", icon: <Settings /> },
-  { name: "Logout", path: "/logout", icon: <Logout /> },
+  { name: "Logout", path: "/", icon: <Logout /> },
 ];
 
 const AppDrawer = ({ open, toggleDrawer }) => {

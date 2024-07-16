@@ -44,8 +44,8 @@ function Appbar() {
           >
             Money Manager
           </Typography>
-          <Box sx={{ flexGrow: 2, display: { xs: "none", md: "flex" } }}></Box>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 2, display: { xs: "none", sm: "flex" } }}></Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page.path}
@@ -62,7 +62,7 @@ function Appbar() {
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}></Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", sm: "none" } }}></Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={toggleDrawer(true)} sx={{ p: 0 }}>

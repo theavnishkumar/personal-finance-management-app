@@ -14,13 +14,24 @@ import Analytics from "./pages/Analytics.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Home />,
     errorElement: <Error />,
     children: [
       {
-        path: "/",
-        element: <Home />,
+        path: "login",
+        element: <Login />,
       },
+      {
+        path: "signup",
+        element: <Signup />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <Error />,
+    children: [
       {
         path: "/dashboard",
         element: <Dashboard />,
@@ -32,14 +43,6 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
-      },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/signup",
-        element: <Signup />,
       },
     ],
   },

@@ -21,11 +21,11 @@ export default function BottomNav() {
   return (
     <Paper
       sx={{
-        position: "absolute",
+        position: "fixed",
         bottom: 0,
         left: 0,
         right: 0,
-        display: { md: "none" },
+        display: { sm: "none" },
       }}
       elevation={4}
     >
