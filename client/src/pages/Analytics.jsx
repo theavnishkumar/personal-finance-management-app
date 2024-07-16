@@ -1,5 +1,6 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
+import Footer from "../components/Footer";
 
 const Analytics = () => {
   return (
@@ -32,6 +33,16 @@ const Analytics = () => {
           height={250}
         />
       </div>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: { xs: 70, sm: 20 },
+          left: 0,
+          right: 0,
+        }}
+      >
+        <Footer />
+      </Box>
     </div>
   );
 };

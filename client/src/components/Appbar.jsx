@@ -55,7 +55,6 @@ function Appbar() {
                   my: 2,
                   color: "white",
                   display: "block",
-                  fontWeight: 300,
                 }}
               >
                 {page.name}

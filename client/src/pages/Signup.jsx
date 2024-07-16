@@ -1,9 +1,21 @@
-import { Button, Divider, Paper, TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
+import { ArrowBackIosRounded, HomeRounded } from "@mui/icons-material";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-[calc(100svh-4.3rem)] flex flex-col justify-center items-center max-[600px]:min-h-[calc(100svh-7rem)]">
+    <div className="min-h-[calc(100svh-4.3rem)] mt-10 max-[600px]:min-h-[calc(100svh-7rem)]">
       <Paper
         sx={{
           display: "flex",
@@ -18,9 +30,26 @@ const Signup = () => {
         }}
         elevation={4}
       >
-        <Typography variant="h5" sx={{ textTransform: "uppercase" }}>
-          Signup
-        </Typography>
+        <Container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Link onClick={() => navigate(-1)}>
+            <ArrowBackIosRounded />
+          </Link>
+          <Typography
+            variant="h5"
+            sx={{ textTransform: "uppercase", fontWeight: 600 }}
+          >
+            Signup
+          </Typography>
+          <Link to={"/"}>
+            <HomeRounded />
+          </Link>
+        </Container>
         <Divider sx={{ width: "100%", marginBottom: 1 }} />
         <TextField
           required
@@ -50,7 +79,13 @@ const Signup = () => {
         />
         <Button
           fullWidth={true}
-          sx={{ backgroundColor: "#02474d", color: "white" }}
+          sx={{
+            backgroundColor: "#02474d",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "#026873",
+            },
+          }}
         >
           Signup
         </Button>
@@ -61,6 +96,16 @@ const Signup = () => {
           </Link>
         </Typography>
       </Paper>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 15,
+          left: 0,
+          right: 0,
+        }}
+      >
+        <Footer />
+      </Box>
     </div>
   );
 };

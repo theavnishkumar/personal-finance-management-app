@@ -1,16 +1,14 @@
-import { Button } from "@mui/material";
-import { Link, Outlet } from "react-router-dom";
+import Footer from "../components/Footer";
+import Hero from "../components/Hero";
 
 const Home = () => {
   return (
-    <div>
+    <>
       <main>
-        <Button variant="contained" sx={{ margin: 3 }}>
-          <Link to={"/dashboard"}>Login</Link>
-        </Button>
-        <Outlet />
+        <Hero />
       </main>
-    </div>
+      <Footer />
+    </>
   );
 };
 
