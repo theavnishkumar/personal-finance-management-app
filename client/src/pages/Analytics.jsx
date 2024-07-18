@@ -2,6 +2,29 @@ import { Box, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
 import Footer from "../components/Footer";
 
+const expenses = [
+  {
+    id: 1,
+    label: "Mango",
+    value: 34,
+  },
+  {
+    id: 2,
+    label: "Books",
+    value: 54,
+  },
+  {
+    id: 3,
+    label: "Pen",
+    value: 14,
+  },
+  {
+    id: 4,
+    label: "Ice Cream",
+    value: 15,
+  },
+];
+
 const Analytics = () => {
   return (
     <div className="">
@@ -16,11 +39,7 @@ const Analytics = () => {
         <PieChart
           series={[
             {
-              data: [
-                { id: 0, value: 50, label: "Food" },
-                { id: 1, value: 20, label: "Stationary" },
-                { id: 2, value: 30, label: "Education" },
-              ],
+              data: expenses,
               highlightScope: { faded: "global", highlighted: "item" },
               faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
               innerRadius: 10,

@@ -12,6 +12,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Paper,
+  Typography,
 } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -24,66 +26,33 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
-import ExpenseTable from "../components/ExpenseTable";
 dayjs.locale("en-gb");
+import axios from "axios";
+import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 
-const expenses = [
-  {
-    _id: 1,
-    title: "Mango",
-    date: "17/07/2024",
-    amount: 34,
-    category: "food",
-    paymentMode: "bank transfer",
-    expenseType: "expense",
-  },
-  {
-    _id: 2,
-    title: "Books",
-    date: "7/07/2024",
-    amount: 854,
-    category: "education",
-    paymentMode: "upi",
-    expenseType: "expense",
-  },
-  {
-    _id: 3,
-    title: "Pen",
-    date: "19/07/2024",
-    amount: 94,
-    category: "education",
-    paymentMode: "cash",
-    expenseType: "expense",
-  },
-  {
-    _id: 4,
-    title: "Ice Cream",
-    date: "15/07/2024",
-    amount: 45,
-    category: "food",
-    paymentMode: "upi",
-    expenseType: "expense",
-  },
-  {
-    _id: 5,
-    title: "Salary",
-    date: "2/07/2024",
-    amount: 45,
-    category: "salary",
-    paymentMode: "Cash",
-    expenseType: "income",
-  },
-];
+const VITE_API = `${import.meta.env.VITE_API}`;
 
 const Dashboard = () => {
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    axios
+      .get(`${VITE_API}/dashboard`)
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error making the GET request!", error);
+      });
+  }, []);
   const [open, setOpen] = React.useState(false);
   const [expenseData, setExpenseData] = React.useState({
     title: "",
-    amount: 0,
+    amount: "",
     date: Date.now(),
-    category: "food",
-    paymentMode: "upi",
-    expenseType: "expense",
+    category: "Food",
+    paymentMode: "UPI",
+    expenseType: "Expense",
   });
 
   const handleClickOpen = () => {
@@ -92,7 +61,29 @@ const Dashboard = () => {
 
   const handleClose = () => {
     setOpen(false);
-    console.log(expenseData);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!expenseData.title || !expenseData.amount) return;
+    try {
+      const response = await axios.post(
+        `${VITE_API}/api/expenses`,
+        expenseData
+      );
+      setExpenseData({
+        title: "",
+        amount: "",
+        date: Date.now(),
+        category: "Food",
+        paymentMode: "UPI",
+        expenseType: "Expense",
+      });
+      handleClose();
+      console.log("Expense saved:", response.data);
+    } catch (error) {
+      console.error("Error saving expense:", error);
+    }
   };
 
   const theme = useTheme();
@@ -103,8 +94,8 @@ const Dashboard = () => {
       <Fab
         aria-label="edit"
         sx={{
-          position: "fixed",
           bottom: { xs: 70, sm: 20 },
+          position: "fixed",
           right: 15,
           backgroundColor: "#02474d",
           color: "white",
@@ -119,11 +110,77 @@ const Dashboard = () => {
           flexDirection: "column",
           alignItems: "center",
           padding: 1,
-          gap: 2,
+          gap: 1,
         }}
       >
-        <ExpenseTable expenses={expenses} month="This Month" />
-        <ExpenseTable expenses={expenses} month="Last Month" />
+        This Month
+        {data.map((item) => {
+          return (
+            <Paper
+              elevation={4}
+              sx={{
+                minWidth: {
+                  xs: 340,
+                  sm: 580,
+                  md: 750,
+                },
+                px: 2,
+                py: 1.2,
+              }}
+              key={item._id}
+            >
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="body1">{item.title}</Typography>
+                  <Typography variant="caption" ml={0.2} sx={{ color: "gray" }}>
+                    {item.category}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="body2" sx={{ color: "gray" }}>
+                    {new Date(item.expenseDate).toLocaleDateString("en-GB")}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                      alignItems: "flex-end",
+                      fontSize: 22,
+                      pt: 0.8,
+                      gap: 3,
+                    }}
+                  >
+                    <MdOutlineEdit />
+                    <MdDeleteOutline />
+                  </Box>
+                </Box>
+                <Box sx={{ flex: 0 }}>
+                  {`${item.expenseType}` === "Expense" ? (
+                    <Typography variant="body2" sx={{ color: "red" }}>
+                      -{item.amount}
+                    </Typography>
+                  ) : (
+                    <Typography variant="body2" sx={{ color: "green" }}>
+                      +{item.amount}
+                    </Typography>
+                  )}
+                  <Typography variant="caption" sx={{ color: "gray" }}>
+                    {item.expenseType}
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
+          );
+        })}
       </Box>
       {/* Dialog */}
       <Dialog
@@ -170,8 +227,8 @@ const Dashboard = () => {
                 setExpenseData({ ...expenseData, expenseType: value })
               }
             >
-              <ToggleButton value="expense">Expense</ToggleButton>
-              <ToggleButton value="income">Income</ToggleButton>
+              <ToggleButton value="Expense">Expense</ToggleButton>
+              <ToggleButton value="Income">Income</ToggleButton>
             </ToggleButtonGroup>
 
             {/* Title Field */}
@@ -223,7 +280,7 @@ const Dashboard = () => {
 
             {/* Category Select */}
             <InputLabel id="category">Category</InputLabel>
-            {expenseData.expenseType === "expense" ? (
+            {expenseData.expenseType === "Expense" ? (
               <Select
                 labelId="category"
                 id="category-select"
@@ -232,34 +289,34 @@ const Dashboard = () => {
                   setExpenseData({ ...expenseData, category: e.target.value })
                 }
               >
-                <MenuItem value="food">Food</MenuItem>
+                <MenuItem value="Food">Food</MenuItem>
                 <MenuItem value="Household">Household</MenuItem>
-                <MenuItem value="education">Education</MenuItem>
-                <MenuItem value="transport">Transport</MenuItem>
-                <MenuItem value="health">Health</MenuItem>
-                <MenuItem value="beauty">Beauty</MenuItem>
-                <MenuItem value="lifestyle">Lifestyle</MenuItem>
-                <MenuItem value="social life">Scoail Life</MenuItem>
+                <MenuItem value="Education">Education</MenuItem>
+                <MenuItem value="Transport">Transport</MenuItem>
+                <MenuItem value="Health">Health</MenuItem>
+                <MenuItem value="Beauty">Beauty</MenuItem>
+                <MenuItem value="Lifestyle">Lifestyle</MenuItem>
+                <MenuItem value="Social life">Scoail Life</MenuItem>
                 <MenuItem value="Entertainment">Entertainment</MenuItem>
-                <MenuItem value="pets">Pets</MenuItem>
-                <MenuItem value="culture">Culture</MenuItem>
-                <MenuItem value="apperal">Apperal</MenuItem>
-                <MenuItem value="gift">Gift</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
+                <MenuItem value="Pets">Pets</MenuItem>
+                <MenuItem value="Culture">Culture</MenuItem>
+                <MenuItem value="Apperal">Apperal</MenuItem>
+                <MenuItem value="Gift">Gift</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
               </Select>
             ) : (
               <Select
                 labelId="category"
                 id="category-select"
-                value={"salary"}
+                value={"Salary"}
                 onChange={(e) =>
                   setExpenseData({ ...expenseData, category: e.target.value })
                 }
               >
-                <MenuItem value="salary">Salary</MenuItem>
-                <MenuItem value="allowance">Allowance</MenuItem>
-                <MenuItem value="bonus">Bonus</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
+                <MenuItem value="Salary">Salary</MenuItem>
+                <MenuItem value="Allowance">Allowance</MenuItem>
+                <MenuItem value="Bonus">Bonus</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
               </Select>
             )}
 
@@ -276,9 +333,9 @@ const Dashboard = () => {
                 })
               }
             >
-              <MenuItem value="upi">UPI</MenuItem>
-              <MenuItem value="cash">Cash</MenuItem>
-              <MenuItem value="bank transfer">Bank Transfer</MenuItem>
+              <MenuItem value="UPI">UPI</MenuItem>
+              <MenuItem value="Cash">Cash</MenuItem>
+              <MenuItem value="Bank Transfer">Bank Transfer</MenuItem>
             </Select>
           </Box>
         </DialogContent>
@@ -288,7 +345,7 @@ const Dashboard = () => {
           <Button autoFocus onClick={handleClose}>
             Cancle
           </Button>
-          <Button onClick={handleClose} autoFocus>
+          <Button onClick={handleSubmit} autoFocus>
             Create
           </Button>
         </DialogActions>
