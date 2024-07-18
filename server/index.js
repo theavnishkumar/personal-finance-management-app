@@ -1,21 +1,29 @@
 import express from 'express';
-const app = express();
 import dotenv from 'dotenv';
-dotenv.config().parsed;
-import connectDB from './connection.js';
 import cors from 'cors';
-app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
-const port = process.env.PORT || 3000;
+import connectDB from './connection.js';
 import users from './models/user.js';
 import expenseData from './models/expenseData.js';
+
+dotenv.config().parsed;
+
+const app = express();
+app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use(express.json());
+
+const port = process.env.PORT || 3000;
 
 connectDB();
 
 app.get('/', async (req, res) => {
-    const data = await users.find();
-    console.log(data)
-    res.json(data);
+    try {
+        const data = await users.find();
+        console.log(data);
+        res.json(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
 });
 
 app.get('/dashboard', async (req, res) => {
