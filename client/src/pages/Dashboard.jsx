@@ -37,7 +37,7 @@ const Dashboard = () => {
 
   React.useEffect(() => {
     axios
-      .get(`${VITE_API}/dashboard`)
+      .get(`${VITE_API}/api/expenses`)
       .then((response) => {
         setData(response.data);
       })
@@ -66,11 +66,12 @@ const Dashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!expenseData.title || !expenseData.amount) return;
+    const formattedDate = new Date(expenseData.date).toISOString();
     try {
-      const response = await axios.post(
-        `${VITE_API}/api/expenses`,
-        expenseData
-      );
+      const response = await axios.post(`${VITE_API}/api/expenses`, {
+        ...expenseData,
+        date: formattedDate,
+      });
       setExpenseData({
         title: "",
         amount: "",
@@ -83,6 +84,17 @@ const Dashboard = () => {
       console.log("Expense saved:", response.data);
     } catch (error) {
       console.error("Error saving expense:", error);
+    }
+  };
+
+  const handleExpenseTypeChange = (e, value) => {
+    if (value !== null) {
+      const defaultCategory = value === "Expense" ? "Food" : "Salary";
+      setExpenseData({
+        ...expenseData,
+        expenseType: value,
+        category: defaultCategory,
+      });
     }
   };
 
@@ -223,9 +235,7 @@ const Dashboard = () => {
               value={expenseData.expenseType}
               exclusive
               aria-label="Platform"
-              onChange={(e, value) =>
-                setExpenseData({ ...expenseData, expenseType: value })
-              }
+              onChange={handleExpenseTypeChange}
             >
               <ToggleButton value="Expense">Expense</ToggleButton>
               <ToggleButton value="Income">Income</ToggleButton>
@@ -280,45 +290,74 @@ const Dashboard = () => {
 
             {/* Category Select */}
             <InputLabel id="category">Category</InputLabel>
-            {expenseData.expenseType === "Expense" ? (
-              <Select
-                labelId="category"
-                id="category-select"
-                value={expenseData.category || ""}
-                onChange={(e) =>
-                  setExpenseData({ ...expenseData, category: e.target.value })
-                }
-              >
-                <MenuItem value="Food">Food</MenuItem>
-                <MenuItem value="Household">Household</MenuItem>
-                <MenuItem value="Education">Education</MenuItem>
-                <MenuItem value="Transport">Transport</MenuItem>
-                <MenuItem value="Health">Health</MenuItem>
-                <MenuItem value="Beauty">Beauty</MenuItem>
-                <MenuItem value="Lifestyle">Lifestyle</MenuItem>
-                <MenuItem value="Social life">Scoail Life</MenuItem>
-                <MenuItem value="Entertainment">Entertainment</MenuItem>
-                <MenuItem value="Pets">Pets</MenuItem>
-                <MenuItem value="Culture">Culture</MenuItem>
-                <MenuItem value="Apperal">Apperal</MenuItem>
-                <MenuItem value="Gift">Gift</MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
-              </Select>
-            ) : (
-              <Select
-                labelId="category"
-                id="category-select"
-                value={"Salary"}
-                onChange={(e) =>
-                  setExpenseData({ ...expenseData, category: e.target.value })
-                }
-              >
-                <MenuItem value="Salary">Salary</MenuItem>
-                <MenuItem value="Allowance">Allowance</MenuItem>
-                <MenuItem value="Bonus">Bonus</MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
-              </Select>
-            )}
+            <Select
+              labelId="category"
+              id="category-select"
+              value={expenseData.category} // Use the state variable here
+              onChange={(e) =>
+                setExpenseData({ ...expenseData, category: e.target.value })
+              }
+            >
+              {expenseData.expenseType === "Expense"
+                ? [
+                    <MenuItem value="Food" key="Food">
+                      Food
+                    </MenuItem>,
+                    <MenuItem value="Household" key="Household">
+                      Household
+                    </MenuItem>,
+                    <MenuItem value="Education" key="Education">
+                      Education
+                    </MenuItem>,
+                    <MenuItem value="Transport" key="Transport">
+                      Transport
+                    </MenuItem>,
+                    <MenuItem value="Health" key="Health">
+                      Health
+                    </MenuItem>,
+                    <MenuItem value="Beauty" key="Beauty">
+                      Beauty
+                    </MenuItem>,
+                    <MenuItem value="Lifestyle" key="Lifestyle">
+                      Lifestyle
+                    </MenuItem>,
+                    <MenuItem value="Social life" key="Social life">
+                      Social Life
+                    </MenuItem>,
+                    <MenuItem value="Entertainment" key="Entertainment">
+                      Entertainment
+                    </MenuItem>,
+                    <MenuItem value="Pets" key="Pets">
+                      Pets
+                    </MenuItem>,
+                    <MenuItem value="Culture" key="Culture">
+                      Culture
+                    </MenuItem>,
+                    <MenuItem value="Apparel" key="Apparel">
+                      Apparel
+                    </MenuItem>,
+                    <MenuItem value="Gift" key="Gift">
+                      Gift
+                    </MenuItem>,
+                    <MenuItem value="Other" key="Other">
+                      Other
+                    </MenuItem>,
+                  ]
+                : [
+                    <MenuItem value="Salary" key="Salary">
+                      Salary
+                    </MenuItem>,
+                    <MenuItem value="Allowance" key="Allowance">
+                      Allowance
+                    </MenuItem>,
+                    <MenuItem value="Bonus" key="Bonus">
+                      Bonus
+                    </MenuItem>,
+                    <MenuItem value="Other" key="Other">
+                      Other
+                    </MenuItem>,
+                  ]}
+            </Select>
 
             {/* Payment Mode Select */}
             <InputLabel id="payment-mode">Payment Mode</InputLabel>

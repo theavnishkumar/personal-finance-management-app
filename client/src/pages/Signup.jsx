@@ -7,12 +7,36 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { ArrowBackIosRounded, HomeRounded } from "@mui/icons-material";
+import { useState } from "react";
+const VITE_API = `${import.meta.env.VITE_API}`;
 
 const Signup = () => {
   const navigate = useNavigate();
+
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post(`${VITE_API}/api/signup`, userData)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          navigate("/login");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div className="min-h-[calc(100svh-4.3rem)] mt-10 max-[600px]:min-h-[calc(100svh-7rem)]">
@@ -51,44 +75,63 @@ const Signup = () => {
           </Link>
         </Container>
         <Divider sx={{ width: "100%", marginBottom: 1 }} />
-        <TextField
-          required
-          id="standard-name-required"
-          label="Name"
-          variant="standard"
-          fullWidth={true}
-          sx={{ marginBottom: 1 }}
-        />
-        <TextField
-          required
-          id="standard-required"
-          label="Email"
-          variant="standard"
-          fullWidth={true}
-          sx={{ marginBottom: 1 }}
-        />
-        <TextField
-          id="standard-password-input"
-          label="Password"
-          type="password"
-          required
-          autoComplete="current-password"
-          variant="standard"
-          fullWidth={true}
-          sx={{ marginBottom: 2 }}
-        />
-        <Button
-          fullWidth={true}
-          sx={{
-            backgroundColor: "#02474d",
-            color: "white",
-            "&:hover": {
-              backgroundColor: "#026873",
-            },
-          }}
-        >
-          Signup
-        </Button>
+        <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
+          <TextField
+            required
+            id="standard-name-required"
+            label="Name"
+            variant="standard"
+            fullWidth={true}
+            value={userData.name}
+            onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+            sx={{ marginBottom: 1 }}
+          />
+          <TextField
+            required
+            id="standard-required"
+            label="Email"
+            variant="standard"
+            value={userData.email}
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
+            fullWidth={true}
+            sx={{ marginBottom: 1 }}
+          />
+          <TextField
+            id="standard-password-input"
+            label="Password"
+            type="password"
+            value={userData.password}
+            onChange={(e) =>
+              setUserData({ ...userData, password: e.target.value })
+            }
+            required
+            autoComplete="current-password"
+            variant="standard"
+            fullWidth={true}
+            sx={{ marginBottom: 2 }}
+          />
+          <Button
+            fullWidth={true}
+            sx={{
+              backgroundColor: "#02474d",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#026873",
+              },
+            }}
+            // onClick={handleSubmit}
+            type="submit"
+            disabled={
+              userData.name === "" ||
+              userData.email === "" ||
+              userData.password === ""
+            }
+          >
+            Signup
+          </Button>
+        </form>
         <Typography>
           Already have an account?{" "}
           <Link to={"/login"} className="underline font-semibold">
