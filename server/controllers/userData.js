@@ -40,7 +40,7 @@ const handleUserSignup = async (req, res) => {
             email,
             password: passwordHash
         });
-        const token = jwt.sign({ email: email }, process.env.JWT_SECRET, { expiresIn: '14d' });
+        const token = jwt.sign({ userId: _id, name: name, email: email }, process.env.JWT_SECRET, { expiresIn: '14d' });
         return res.status(200).json({ token });
     } catch (error) {
         console.error(error);
