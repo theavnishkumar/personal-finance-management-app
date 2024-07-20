@@ -3,6 +3,7 @@ import expenseData from '../models/expenseData.js';
 const handleExpensePost = async (req, res) => {
     try {
         const { title, category, amount, paymentMode, expenseType, expenseDate } = req.body;
+        const userId = req.userId;
         const formattedDate = new Date(expenseDate);
         if (isNaN(formattedDate)) {
             return res.status(400).send('Invalid date format');
@@ -13,7 +14,8 @@ const handleExpensePost = async (req, res) => {
             amount,
             paymentMode,
             expenseType,
-            expenseDate: formattedDate
+            expenseDate: formattedDate,
+            user: userId
         });
         res.json(data);
     } catch (error) {
@@ -23,8 +25,9 @@ const handleExpensePost = async (req, res) => {
 }
 
 const handleExpenseGET = async (req, res) => {
+    const userId = req.userId;
     try {
-        const data = await expenseData.find().sort({ expenseDate: -1 });
+        const data = await expenseData.find({ user: userId }).sort({ expenseDate: -1 });
         res.json(data);
     } catch (error) {
         console.error(error);

@@ -1,18 +1,24 @@
 import users from "../models/user.js";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config().parsed;
+
 
 const handleUserLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await users.findOne({ email: email });
         if (!user) {
-            res.status(404).json({ msg: 'User not found' });
+            return res.status(404).json({ msg: 'User not found' });
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid credentials' });
         }
-        res.status(200).json({ msg: 'User found' });
+        const token = jwt.sign({ userId: user._id, name: user.name, email: user.email }, process.env.JWT_SECRET, { expiresIn: '14d' });
+        return res.status(201).json({ token });
     } catch (error) {
         console.error(error);
         res.status(500).send('Server Error');
@@ -34,7 +40,8 @@ const handleUserSignup = async (req, res) => {
             email,
             password: passwordHash
         });
-        res.status(200).json({ msg: 'User created successfully' });
+        const token = jwt.sign({ email: email }, process.env.JWT_SECRET, { expiresIn: '14d' });
+        return res.status(200).json({ token });
     } catch (error) {
         console.error(error);
         res.status(500).send('Server Error');

@@ -24,6 +24,11 @@ const expenseDataSchema = new mongoose.Schema({
     expenseDate: {
         type: Date,
         default: Date.now
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
     }
 }, {
     timestamps: true
