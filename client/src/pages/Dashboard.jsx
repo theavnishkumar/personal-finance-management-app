@@ -44,7 +44,7 @@ const Dashboard = () => {
       .catch((error) => {
         console.error("There was an error making the GET request!", error);
       });
-  }, []);
+  }, [data]);
   const [open, setOpen] = React.useState(false);
   const [expenseData, setExpenseData] = React.useState({
     title: "",
@@ -70,7 +70,7 @@ const Dashboard = () => {
     try {
       const response = await axios.post(`${VITE_API}/api/expenses`, {
         ...expenseData,
-        date: formattedDate,
+        expenseDate: formattedDate,
       });
       setExpenseData({
         title: "",
@@ -84,6 +84,19 @@ const Dashboard = () => {
       console.log("Expense saved:", response.data);
     } catch (error) {
       console.error("Error saving expense:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${VITE_API}/api/expenses/${id}`);
+      if (response.status === 200) {
+        setData((prevData) => prevData.filter((item) => item._id !== id));
+      } else {
+        console.error("Failed to delete the expense");
+      }
+    } catch (error) {
+      console.error("Error deleting expense:", error);
     }
   };
 
@@ -172,7 +185,7 @@ const Dashboard = () => {
                     }}
                   >
                     <MdOutlineEdit />
-                    <MdDeleteOutline />
+                    <MdDeleteOutline onClick={() => handleDelete(item._id)} />
                   </Box>
                 </Box>
                 <Box sx={{ flex: 0 }}>
