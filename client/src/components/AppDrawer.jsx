@@ -20,16 +20,24 @@ import {
   SpaceDashboard,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const drawerData = [
   { name: "Dashboard", path: "/dashboard", icon: <SpaceDashboard /> },
   { name: "Analytics", path: "/analytics", icon: <AnalyticsRounded /> },
   { name: "Profile", path: "/profile", icon: <AccountCircle /> },
   { name: "Settings", path: "/settings", icon: <Settings /> },
-  { name: "Logout", path: "/", icon: <Logout /> },
 ];
 
 const AppDrawer = ({ open, toggleDrawer }) => {
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
   const drawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <Paper
@@ -47,9 +55,9 @@ const AppDrawer = ({ open, toggleDrawer }) => {
           AK
         </Avatar>
         <Box>
-          <Typography variant="h6">Avnish Kumar</Typography>
+          <Typography variant="h6">{user?.name}</Typography>
           <Typography sx={{ fontSize: "0.9rem", color: "text.secondary" }}>
-            hi@theavnishkumar
+            {user?.email}
           </Typography>
         </Box>
       </Paper>
@@ -63,6 +71,14 @@ const AppDrawer = ({ open, toggleDrawer }) => {
             </ListItemButton>
           </ListItem>
         ))}
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleLogout}>
+            <ListItemIcon>
+              <Logout />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );

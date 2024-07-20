@@ -10,6 +10,7 @@ import Profile from "./pages/Profile.jsx";
 import Error from "./Error.jsx";
 import Home from "./pages/Home.jsx";
 import Analytics from "./pages/Analytics.jsx";
+import { AuthProvider } from "./context/AuthContext";
 
 const router = createBrowserRouter([
   {
@@ -18,12 +19,12 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
-    path: "login",
+    path: "/login",
     element: <Login />,
     errorElement: <Error />,
   },
   {
-    path: "signup",
+    path: "/signup",
     element: <Signup />,
     errorElement: <Error />,
   },
@@ -50,8 +51,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

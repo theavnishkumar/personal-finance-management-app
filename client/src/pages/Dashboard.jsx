@@ -71,7 +71,7 @@ const Dashboard = () => {
     if (!expenseData.title || !expenseData.amount) return;
     const formattedDate = new Date(expenseData.date).toISOString();
     try {
-      const response = await axios.post(`${VITE_API}/api/expenses`, {
+      await axios.post(`${VITE_API}/api/expenses`, {
         ...expenseData,
         expenseDate: formattedDate,
       });
@@ -84,7 +84,7 @@ const Dashboard = () => {
         expenseType: "Expense",
       });
       handleClose();
-      console.log("Expense saved:", response.data);
+      // console.log("Expense saved:", response.data);
     } catch (error) {
       console.error("Error saving expense:", error);
     }

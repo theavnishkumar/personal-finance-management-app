@@ -7,14 +7,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { ArrowBackIosRounded, HomeRounded } from "@mui/icons-material";
-import { useState } from "react";
-const VITE_API = `${import.meta.env.VITE_API}`;
+import { useContext, useEffect, useState } from "react";
+import AuthContext from "../context/AuthContext";
 
 const Signup = () => {
+  const { signup, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
@@ -23,20 +23,20 @@ const Signup = () => {
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios
-      .post(`${VITE_API}/api/signup`, userData)
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          navigate("/login");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      await signup(userData.name, userData.email, userData.password);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Signup failed:", error);
+    }
   };
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   return (
     <div className="min-h-[calc(100svh-4.3rem)] mt-10 max-[600px]:min-h-[calc(100svh-7rem)]">
