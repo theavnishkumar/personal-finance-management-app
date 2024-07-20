@@ -45,7 +45,10 @@ const Dashboard = () => {
         console.error("There was an error making the GET request!", error);
       });
   }, [data]);
+
   const [open, setOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [selectedItem, setSelectedItem] = React.useState(null);
   const [expenseData, setExpenseData] = React.useState({
     title: "",
     amount: "",
@@ -108,6 +111,46 @@ const Dashboard = () => {
         expenseType: value,
         category: defaultCategory,
       });
+    }
+  };
+
+  const handleEdit = (item) => {
+    setSelectedItem(item);
+    setExpenseData({
+      title: item.title,
+      amount: item.amount,
+      date: new Date(item.expenseDate),
+      category: item.category,
+      paymentMode: item.paymentMode,
+      expenseType: item.expenseType,
+    });
+    setEditOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setEditOpen(false);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!expenseData.title || !expenseData.amount) return;
+    const formattedDate = new Date(expenseData.date).toISOString();
+    try {
+      const response = await axios.put(
+        `${VITE_API}/api/expenses/${selectedItem._id}`,
+        {
+          ...expenseData,
+          expenseDate: formattedDate,
+        }
+      );
+      setData((prevData) =>
+        prevData.map((item) =>
+          item._id === selectedItem._id ? response.data : item
+        )
+      );
+      handleEditClose();
+    } catch (error) {
+      console.error("Error updating expense:", error);
     }
   };
 
@@ -184,8 +227,14 @@ const Dashboard = () => {
                       gap: 3,
                     }}
                   >
-                    <MdOutlineEdit />
-                    <MdDeleteOutline onClick={() => handleDelete(item._id)} />
+                    <MdOutlineEdit
+                      onClick={() => handleEdit(item)}
+                      style={{ color: "blue", cursor: "pointer" }}
+                    />
+                    <MdDeleteOutline
+                      onClick={() => handleDelete(item._id)}
+                      style={{ color: "red", cursor: "pointer" }}
+                    />
                   </Box>
                 </Box>
                 <Box sx={{ flex: 0 }}>
@@ -207,7 +256,7 @@ const Dashboard = () => {
           );
         })}
       </Box>
-      {/* Dialog */}
+      {/* Dialog for Adding Expense*/}
       <Dialog
         fullScreen={fullScreen}
         open={open}
@@ -399,6 +448,195 @@ const Dashboard = () => {
           </Button>
           <Button onClick={handleSubmit} autoFocus>
             Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog for Editing Expense */}
+      <Dialog
+        fullScreen={fullScreen}
+        open={editOpen}
+        onClose={handleEditClose}
+        aria-labelledby="edit-dialog-title"
+      >
+        <DialogTitle
+          id="edit-dialog-title"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+        >
+          <EditIcon sx={{ mr: 1 }} />
+          {"Edit Expense"}
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              minWidth: 300,
+              maxWidth: 350,
+              gap: 2,
+            }}
+          >
+            <ToggleButtonGroup
+              color="primary"
+              sx={{ height: 35 }}
+              value={expenseData.expenseType}
+              exclusive
+              aria-label="Platform"
+              onChange={handleExpenseTypeChange}
+            >
+              <ToggleButton value="Expense">Expense</ToggleButton>
+              <ToggleButton value="Income">Income</ToggleButton>
+            </ToggleButtonGroup>
+
+            <TextField
+              required
+              id="edit-title"
+              label="Title"
+              variant="standard"
+              value={expenseData.title}
+              onChange={(e) =>
+                setExpenseData({ ...expenseData, title: e.target.value })
+              }
+              sx={{ marginBottom: 1 }}
+            />
+
+            <TextField
+              required
+              id="edit-amount"
+              label="Amount"
+              variant="standard"
+              type="number"
+              value={expenseData.amount}
+              onChange={(e) =>
+                setExpenseData({ ...expenseData, amount: e.target.value })
+              }
+            />
+
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale="en-gb"
+            >
+              <DatePicker
+                label="Date"
+                value={dayjs(expenseData.date)}
+                sx={{ my: 2 }}
+                onChange={(date) =>
+                  setExpenseData({
+                    ...expenseData,
+                    date: date ? date.toDate() : null,
+                  })
+                }
+                slots={{
+                  textField: (params) => <TextField {...params} />,
+                }}
+              />
+            </LocalizationProvider>
+
+            <InputLabel id="edit-category">Category</InputLabel>
+            <Select
+              labelId="edit-category"
+              id="edit-category-select"
+              value={expenseData.category}
+              onChange={(e) =>
+                setExpenseData({ ...expenseData, category: e.target.value })
+              }
+            >
+              {expenseData.expenseType === "Expense"
+                ? [
+                    <MenuItem value="Food" key="Food">
+                      Food
+                    </MenuItem>,
+                    <MenuItem value="Household" key="Household">
+                      Household
+                    </MenuItem>,
+                    <MenuItem value="Education" key="Education">
+                      Education
+                    </MenuItem>,
+                    <MenuItem value="Transport" key="Transport">
+                      Transport
+                    </MenuItem>,
+                    <MenuItem value="Health" key="Health">
+                      Health
+                    </MenuItem>,
+                    <MenuItem value="Beauty" key="Beauty">
+                      Beauty
+                    </MenuItem>,
+                    <MenuItem value="Lifestyle" key="Lifestyle">
+                      Lifestyle
+                    </MenuItem>,
+                    <MenuItem value="Social life" key="Social life">
+                      Social Life
+                    </MenuItem>,
+                    <MenuItem value="Entertainment" key="Entertainment">
+                      Entertainment
+                    </MenuItem>,
+                    <MenuItem value="Pets" key="Pets">
+                      Pets
+                    </MenuItem>,
+                    <MenuItem value="Culture" key="Culture">
+                      Culture
+                    </MenuItem>,
+                    <MenuItem value="Apparel" key="Apparel">
+                      Apparel
+                    </MenuItem>,
+                    <MenuItem value="Gift" key="Gift">
+                      Gift
+                    </MenuItem>,
+                    <MenuItem value="Other" key="Other">
+                      Other
+                    </MenuItem>,
+                  ]
+                : [
+                    <MenuItem value="Salary" key="Salary">
+                      Salary
+                    </MenuItem>,
+                    <MenuItem value="Allowance" key="Allowance">
+                      Allowance
+                    </MenuItem>,
+                    <MenuItem value="Bonus" key="Bonus">
+                      Bonus
+                    </MenuItem>,
+                    <MenuItem value="Other" key="Other">
+                      Other
+                    </MenuItem>,
+                  ]}
+            </Select>
+
+            <InputLabel id="edit-payment-mode">Payment Mode</InputLabel>
+            <Select
+              labelId="edit-payment-mode"
+              id="edit-payment-mode-select"
+              value={expenseData.paymentMode}
+              onChange={(e) =>
+                setExpenseData({
+                  ...expenseData,
+                  paymentMode: e.target.value,
+                })
+              }
+            >
+              <MenuItem value="UPI">UPI</MenuItem>
+              <MenuItem value="Cash">Cash</MenuItem>
+              <MenuItem value="Bank Transfer">Bank Transfer</MenuItem>
+            </Select>
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          <Button autoFocus onClick={handleEditClose}>
+            Cancel
+          </Button>
+          <Button onClick={handleEditSubmit} autoFocus>
+            Save
           </Button>
         </DialogActions>
       </Dialog>
