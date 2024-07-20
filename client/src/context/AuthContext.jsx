@@ -38,9 +38,9 @@ export const AuthProvider = ({ children }) => {
     setUser(decoded);
   };
 
-  const signup = async (username, email, password) => {
+  const signup = async (name, email, password) => {
     const response = await axios.post(`${VITE_API}/api/signup`, {
-      username,
+      name,
       email,
       password,
     });
