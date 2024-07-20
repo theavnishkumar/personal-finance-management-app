@@ -42,4 +42,27 @@ const handleExpenseDelete = async (req, res) => {
     }
 }
 
-export { handleExpensePost, handleExpenseGET, handleExpenseDelete }
+const handleExpensePut = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, category, amount, paymentMode, expenseType, expenseDate } = req.body;
+        const formattedDate = new Date(expenseDate);
+        if (isNaN(formattedDate)) {
+            return res.status(400).send('Invalid date format');
+        }
+        const data = await expenseData.findByIdAndUpdate(id, {
+            title,
+            category,
+            amount,
+            paymentMode,
+            expenseType,
+            expenseDate: formattedDate
+        }, { new: true });
+        res.json(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
+}
+
+export { handleExpensePost, handleExpenseGET, handleExpenseDelete, handleExpensePut }
