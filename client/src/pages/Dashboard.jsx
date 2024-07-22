@@ -12,8 +12,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Paper,
-  Typography,
 } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -28,7 +26,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 dayjs.locale("en-gb");
 import axios from "axios";
-import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
+import ExpensesList from "../components/ExpenseList";
 
 const VITE_API = `${import.meta.env.VITE_API}`;
 
@@ -178,83 +176,16 @@ const Dashboard = () => {
           flexDirection: "column",
           alignItems: "center",
           padding: 1,
+          paddingTop: 2,
           gap: 1,
         }}
       >
         This Month
-        {data.map((item) => {
-          return (
-            <Paper
-              elevation={4}
-              sx={{
-                minWidth: {
-                  xs: 340,
-                  sm: 580,
-                  md: 750,
-                },
-                px: 2,
-                py: 1.2,
-              }}
-              key={item._id}
-            >
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                }}
-              >
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="body1">{item.title}</Typography>
-                  <Typography variant="caption" ml={0.2} sx={{ color: "gray" }}>
-                    {item.category}
-                  </Typography>
-                </Box>
-
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="body2" sx={{ color: "gray" }}>
-                    {new Date(item.expenseDate).toLocaleDateString("en-GB")}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "flex-start",
-                      alignItems: "flex-end",
-                      fontSize: 22,
-                      pt: 0.8,
-                      gap: 3,
-                    }}
-                  >
-                    <MdOutlineEdit
-                      onClick={() => handleEdit(item)}
-                      style={{ color: "blue", cursor: "pointer" }}
-                    />
-                    <MdDeleteOutline
-                      onClick={() => handleDelete(item._id)}
-                      style={{ color: "red", cursor: "pointer" }}
-                    />
-                  </Box>
-                </Box>
-                <Box sx={{ flex: 0 }}>
-                  {`${item.expenseType}` === "Expense" ? (
-                    <Typography variant="body2" sx={{ color: "red" }}>
-                      -{item.amount}
-                    </Typography>
-                  ) : (
-                    <Typography variant="body2" sx={{ color: "green" }}>
-                      +{item.amount}
-                    </Typography>
-                  )}
-                  <Typography variant="caption" sx={{ color: "gray" }}>
-                    {item.expenseType}
-                  </Typography>
-                </Box>
-              </Box>
-            </Paper>
-          );
-        })}
+        <ExpensesList
+          data={data}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+        />
       </Box>
       {/* Dialog for Adding Expense*/}
       <Dialog
