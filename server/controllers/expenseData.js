@@ -8,6 +8,7 @@ const handleExpensePost = async (req, res) => {
         if (isNaN(formattedDate)) {
             return res.status(400).send('Invalid date format');
         }
+        console.log(expenseDate, `------`, formattedDate);
         const data = await expenseData.create({
             title,
             category,
