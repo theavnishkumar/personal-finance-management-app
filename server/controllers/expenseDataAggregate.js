@@ -2,14 +2,17 @@ import expenseData from '../models/expenseData.js';
 
 const handleExpenseDailyGET = async (req, res) => {
     const { daily } = req.params;
-    // Parse the date from the URL parameter
+    let startTime = "T00:00:00.000Z";
+    let endTime = "T23:59:59.999Z";
     const parsedDate = new Date(daily);
     if (isNaN(parsedDate)) {
         return res.status(400).send('Invalid date format');
     }
+    const start = new Date(daily + startTime);
+    const end = new Date(daily + endTime);
     try {
         const expenses = await expenseData.find({
-            expenseDate: parsedDate
+            expenseDate: { $gte: start, $lte: end }
         });
         return res.json(expenses);
     } catch (error) {
