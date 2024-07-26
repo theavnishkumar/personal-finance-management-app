@@ -20,15 +20,30 @@ const handleExpenseDailyGET = async (req, res) => {
     }
 };
 
-const handleExpenseMonthlyGET = (req, res) => {
-    try {
-        const { month } = req.params;
-        const dailyExpenses = expenseData.find({ expenseDate: 20240722 });
+const handleExpenseMonthlyGET = async (req, res) => {
+    const userId = req.userId;
+    const { month } = req.params;
 
-        console.log(month);
-        return res.json(dailyExpenses);
+    // Validate month
+    const monthInt = parseInt(month, 10);
+
+    if (isNaN(monthInt) || monthInt < 1 || monthInt > 12) {
+        return res.status(400).send('Invalid month format');
+    }
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const startOfMonth = new Date(year, monthInt - 1, 1);
+    const endOfMonth = new Date(year, monthInt, 0, 23, 59, 59, 999);
+
+    try {
+        const expenses = await expenseData.find({
+            user: userId,
+            expenseDate: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+        return res.json(expenses);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).send(error.message);
     }
 }
 
