@@ -12,6 +12,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Stack,
 } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -180,7 +181,20 @@ const Dashboard = () => {
           gap: 1,
         }}
       >
-        This Month
+        <ToggleButtonGroup
+          color="primary"
+          // value={}
+          exclusive
+          // onChange={}
+          aria-label="Platform"
+        >
+          <ToggleButton value="web">Today</ToggleButton>
+          <ToggleButton value="web">Last 7 Days</ToggleButton>
+          <ToggleButton value="android">This Month</ToggleButton>
+          <ToggleButton value="ios">This Year</ToggleButton>
+          <ToggleButton value="ios">Pick a Date</ToggleButton>
+        </ToggleButtonGroup>
+
         <ExpensesList
           data={data}
           handleEdit={handleEdit}
