@@ -1,31 +1,29 @@
 import { Box, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
 import Footer from "../components/Footer";
-
-const expenses = [
-  {
-    id: 1,
-    label: "Mango",
-    value: 34,
-  },
-  {
-    id: 2,
-    label: "Books",
-    value: 54,
-  },
-  {
-    id: 3,
-    label: "Pen",
-    value: 14,
-  },
-  {
-    id: 4,
-    label: "Ice Cream",
-    value: 15,
-  },
-];
+import React from "react";
+import axios from "axios";
+const VITE_API = `${import.meta.env.VITE_API}`;
 
 const Analytics = () => {
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    axios
+      .get(`${VITE_API}/api/expenses`)
+      .then((response) => {
+        const transformedData = response.data.map((expense) => ({
+          id: expense._id,
+          label: expense.title + `(${expense.amount})`,
+          value: expense.amount,
+        }));
+        setData(transformedData);
+      })
+      .catch((error) => {
+        console.error("There was an error making the GET request!", error);
+      });
+  }, [data]);
+
   return (
     <div className="">
       <Typography
@@ -35,11 +33,11 @@ const Analytics = () => {
       >
         Analytics
       </Typography>
-      <div className="overflow-auto -ml-4">
+      <div className="overflow-auto">
         <PieChart
           series={[
             {
-              data: expenses,
+              data: data,
               highlightScope: { faded: "global", highlighted: "item" },
               faded: { innerRadius: 30, additionalRadius: -30, color: "gray" },
               innerRadius: 10,
@@ -48,7 +46,7 @@ const Analytics = () => {
               cornerRadius: 8,
             },
           ]}
-          width={370}
+          width={400}
           height={250}
         />
       </div>
