@@ -26,7 +26,7 @@ This is a personal financial management application designed to help users manag
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/theavnishkumar/personal-financial-management-app.git
+   https://github.com/theavnishkumar/personal-finance-management-app.git
    ```
 2. Navigate to the project directory:
    ```bash
