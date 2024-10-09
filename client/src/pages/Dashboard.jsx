@@ -32,17 +32,19 @@ const VITE_API = `${import.meta.env.VITE_API}`;
 
 const Dashboard = () => {
   const [data, setData] = React.useState([]);
+  const currentMonth = new Date().getMonth() + 1;
+  const [expenseDate, setExpenseDate] = React.useState(currentMonth);
 
   React.useEffect(() => {
     axios
-      .get(`${VITE_API}/api/expenses`)
+      .get(`${VITE_API}/api/expenses/monthly/${expenseDate}`)
       .then((response) => {
         setData(response.data);
       })
       .catch((error) => {
         console.error("There was an error making the GET request!", error);
       });
-  }, [data]);
+  }, [data, expenseDate]);
 
   const [open, setOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
@@ -170,6 +172,30 @@ const Dashboard = () => {
       >
         <EditIcon />
       </Fab>
+      {/* Expense Select */}
+      <Box sx={{ minWidth: 120, paddingLeft:2, paddingTop:1 }}>
+        <InputLabel id="expense-select">Expense Month</InputLabel>
+      <Select
+        labelId="expense-select"
+        id="expense-date-select"
+        label="Expense Date"
+        value={expenseDate} 
+        onChange={(e) => setExpenseDate(e.target.value)} 
+      >
+        <MenuItem value={1}>January</MenuItem>
+        <MenuItem value={2}>February</MenuItem>
+        <MenuItem value={3}>March</MenuItem>
+        <MenuItem value={4}>April</MenuItem>
+        <MenuItem value={5}>May</MenuItem>
+        <MenuItem value={6}>June</MenuItem>
+        <MenuItem value={7}>July</MenuItem>
+        <MenuItem value={8}>August</MenuItem>
+        <MenuItem value={9}>September</MenuItem>
+        <MenuItem value={10}>October</MenuItem>
+        <MenuItem value={11}>November</MenuItem>
+        <MenuItem value={12}>December</MenuItem>
+      </Select>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -180,7 +206,7 @@ const Dashboard = () => {
           gap: 1,
         }}
       >
-        This Month
+
         <ExpensesList
           data={data}
           handleEdit={handleEdit}
@@ -286,7 +312,7 @@ const Dashboard = () => {
             <Select
               labelId="category"
               id="category-select"
-              value={expenseData.category} // Use the state variable here
+              value={expenseData.category} 
               onChange={(e) =>
                 setExpenseData({ ...expenseData, category: e.target.value })
               }

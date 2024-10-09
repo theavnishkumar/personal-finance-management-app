@@ -7,10 +7,11 @@ const VITE_API = `${import.meta.env.VITE_API}`;
 
 const Analytics = () => {
   const [data, setData] = React.useState([]);
+  const currentMonth = new Date().getMonth() + 1;
 
   React.useEffect(() => {
     axios
-      .get(`${VITE_API}/api/expenses`)
+      .get(`${VITE_API}/api/expenses/monthly/${currentMonth}`)
       .then((response) => {
         const transformedData = response.data.map((expense) => ({
           id: expense._id,
