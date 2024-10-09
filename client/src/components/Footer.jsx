@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="flex flex-col space-y-10 justify-center fixed bottom-3 left-0 right-0">
+    <footer className="flex flex-col space-y-10 justify-center">
       <nav className="flex justify-center flex-wrap gap-6 text-gray-500 font-medium">
         <span className="hover:text-gray-900" href="#">
           <Link to={"/"}>Home</Link>
